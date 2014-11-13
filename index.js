@@ -22,7 +22,29 @@ var intersection = "intersection"
 var trafficSignal = "traffic signal"
 var accident = "accident"
 var walk = "walk to work"
-
+var museum = "museum"
+function displayBaseDetail(base){
+	var baseDataDetailDict = {
+		"tree":"tree = street trees found in NYC's tree census",
+		"bike commuter":"bike commuter = based on American Community Survey",
+		"human":"human = population of new york city",
+		"driver":"driver = based on number of drivers licencses currently on file at new york city dmv",
+		"car": "car = based on number of cars currently registered in new york city ",
+		"child":"child = popultation of new york city under the age of 18",
+		"public transportation":"public commuter = based on American Community Survey",
+		"car commuter":"car commuter = based on American Community Survey",
+		"walk to work":"walk to work = based on American Community Survey",
+		"traffic signal":"traffic signal = based on department of transportation data",
+		"intersection":"intersection = based on department of transportation data via new york times article",
+		"restaurant": "restaurant = based on restaurant inspections by department of health and hyginene ",
+		"cafe":"cafe = based on restaurant inspection sub-categorization by department of health and hyginene ",
+		"park":"park = based on number reported by new york city",
+		"companies registered":"companies = base on subset of statewide corporate registrations",
+		"accident":"accident = base on police reports",
+		"museum":"museum = based on number reported by new york city"
+	}
+	d3.select("#tab-detail").html(baseDataDetailDict[base])
+}
 function dataDidLoad(error, data) {
 	var data = data
 	var base = "human"
@@ -38,6 +60,7 @@ function resetBase(base, data){
 	displayRatios(calculateRatios(data,base,city),base)
 	d3.selectAll(".activetab").style("color","#666")
 	d3.select("."+base).attr("class","activetab")
+	displayBaseDetail(base)
 }
 
 function calculateRatios(data,base,city){
@@ -67,15 +90,15 @@ function compare(a,b) {
 
 var symbolDictionary = {
 	//"bike commuter":"<i class=\"fa fa-bicycle\"></i>",
-	"tree":"<i class=\"fa fa-tree\"></i>",
-	//"tree":"tree",
+	//"tree":"<i class=\"fa fa-tree\"></i>",
+	"tree":"tree",
 	"bike commuter":"bike commuter",
 	"human":"human",
 	"driver":"driver",
 	//"car": "<i class=\"fa fa-car\"></i>",
 	"car": "car",
 	"child":"child",
-	"public transportation":"public transportation",
+	"public transportation":"public commuter",
 	//"public transportation": "<i class=\"fa fa-bus\"></i>",
 	
 	"car commuter":"car commuter",
@@ -86,16 +109,17 @@ var symbolDictionary = {
 	"restaurant": "restaurant",
 	"cafe":"cafe",
 	"park":"park",
-	"companies registered":"companies registered",
+	"companies registered":"companies",
 	"accident":"accident",
 	"museum":"museum"
 	//"museum":"<i class=\"fa fa-university\"></i>"
 }
 function displayRatios(ratioData,base){
 	//console.log(ratioData)
-	var outputData = "<table>"
+	var outputData = "<table> <col width=\"30\"><col width=\"900\">"
 //	var outputString = ""
 	var base = base
+	
 	//console.log(base)
 	for (var item in ratioData){
 		outputData = outputData+"<tr>"
@@ -118,6 +142,9 @@ function displayRatios(ratioData,base){
 		outputData = outputData+"<td>"+one+"</td><td>"
 		for(var times = 0; times < newRatio; times+=1){
 			outputData = outputData+" "+multiple
+			if((times+1)%10 == 0){
+				outputData=outputData+"</br>"
+			}
 		}
 		outputData = outputData+"</td></tr>"
 	//	console.log(item)

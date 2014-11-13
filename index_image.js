@@ -66,11 +66,11 @@ function compare(a,b) {
 }
 
 var symbolDictionary = {
-	"bike commuter":"<i class=\"fa fa-bicycle\"></i>",
-	"tree":"<i class=\"fa fa-tree\"></i>",
-	//"tree":"t",
-	//"bike commuter":"b",
-	"human":"h",
+	//"bike commuter":"<i class=\"fa fa-bicycle\"></i>",
+	//"tree":"<i class=\"fa fa-tree\"></i>",
+	"tree":"t",
+	"bike commuter":"b",
+	"human":"<i class=\"fa fa-user\"></i>",
 	//"driver":"driver",
 	//"car": "<i class=\"fa fa-car\"></i>",
 	"car": "c",
@@ -87,7 +87,7 @@ var symbolDictionary = {
 	"cafe":"c",
 	"park":"p",
 	"companies registered":"c",
-	"accident":"a",
+	"accident":"<i class=\"fa fa-ambulance\"></i>",
 	"museum":"m"
 	//"museum":"<i class=\"fa fa-university\"></i>"
 }
