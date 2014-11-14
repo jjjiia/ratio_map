@@ -41,16 +41,17 @@
 	<div id = "title-text">
 		<div id = "title">New York City</div>
 		<div id = "subtitle">
-			This map visualizes relationships between people, places, objects, and methods in New York City
+			This map visualizes relationships between people, places, objects, and events in New York City
 			<a id="showMore" href="#"> ... more </a>
 		</div>
 	</div>
+	<div id = "tab-detail"></div>
+	
 </div>
 <div id="containers">
 	<div id = "tab">
 
  	</div>
-	<div id = "tab-detail">human = census city population</div>
 	<div id = "ratio">
 		<div class = "people">People</div>
 		<div class = "child">Children</div>
@@ -70,15 +71,23 @@
 	</div>
 </div>
 
-<script type="text/javascript" charset="utf-8">var csv = "nyc_format2.csv"</script>
-<script src="index_image.js"></script>
 
 <div id="essayBox">
 	<div id='essayBox-close' class="glyphicon glyphicon-remove"></div>
-	<div id='essayContent'>
-	<p>placeholder text</p>
-	</div>
+	<div id='essayContent'></br></br>
+	<p>Everything in the city is connected, from the characters(people, trees, institutions) to the events (commutes, accidents). This map displays the ratios between all characters and events in a city inorder to emphasis the view of the city as a interconnected system.</p>
+	<p>Data Sources:</br></br>
+		TODO: add links and double check
+		</br></br>
+		Tree count is the census of street trees in New York City, this data comes from the parks department.</br>
+		Commuting methods are found in the American Community Survey conducted by the Census Bureau.</br>
+		Infrastructure data regarding streets and intersections come from the Department of Transportation.</br>
+		Street Length and bike path length data are calculated based on the coordinates provided by the Department of Transportation.
+		Count of public schools comes from the wikipedia profile of the NYC public school system
+	</p>	</div>
 </div>
+<script type="text/javascript" charset="utf-8">var csv = "nyc_format2.csv"</script>
+<script src="index_image_horizontal.js"></script>
 
 
 

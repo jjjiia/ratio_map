@@ -89,15 +89,15 @@ function compare(a,b) {
 }
 function displayRatios(div, data, base, comparator){
 	var ratio = data[comparator]
-	var iconsize = 15
+	var iconsize = 12
 //	console.log(ratio)
 //	console.log(symbolDictionary[base])
 console.log("ratio: "+parseInt(ratio))
-console.log("number of rows: "+ parseInt(ratio)/10)
-var height = parseInt((ratio/10+1))*iconsize+20
+console.log("number of rows: "+ Math.ceil(ratio/100))
+var height = parseInt((ratio/100))*iconsize+20
 console.log("height: "+height)
 //console.log(height)
-	var svg = d3.select(div).append("svg").attr("height",height).attr("width",iconsize*12).append("g").attr("class", comparator)
+	var svg = d3.select(div).append("svg").attr("height",height).attr("width",iconsize*102).append("g")
 	//append base first
 	svg.append("svg:image")
 		.attr("xlink:href", symbolDictionary[comparator])
@@ -106,27 +106,47 @@ console.log("height: "+height)
 		.attr("width",iconsize)
 		.attr("height",iconsize)
 		.attr("fill","#aaaaaa")
+		.attr("class", comparator)
+		.on("mouseover", function(){
+				console.log(base)
+				d3.select("#tab-detail").html("In New York City, for every "+comparator+", there are " + parseInt(ratio+1)+ " " + pluralDictionary[base]+".")
+			})
 	//append colon
 	//append comparator
 	var j = 0
 
-	for(var i = 1; i < ratio; i++){
-		if((i)%10 == 0){
+	for(var i = 0; i < ratio; i++){
+		if((i)%100 == 0){
 			j = j+1
 		}
 		svg.append("svg:image")
+		.attr("class", comparator)
+		
 			.attr("xlink:href", symbolDictionary[base])
-			.attr("x",(i%10)*iconsize+iconsize)
-			.attr("y",j*iconsize)
+			.attr("x",(i%100)*iconsize+iconsize)
+			.attr("y",j*iconsize-iconsize)
 			.attr("width",iconsize)
 			.attr("height",iconsize)
 			.attr("fill","#aaaaaa")
-			.transition()
-			.delay(function(){return i*1000})
+			.on("mouseover", function(){
+					console.log(base)
+					d3.select("#tab-detail").html("In New York City, for every "+comparator+", there are " + parseInt(ratio+1)+ " " + pluralDictionary[base]+".")
+					
+					//d3.select("#tab-detail").html("1 "+comparator+" : " + parseInt(ratio)+ " " + pluralDictionary[base])
+				})
 	}
-	d3.selectAll("."+comparator).on("mouseover", function(){
-		d3.select("#tab-detail").html("1 "+comparator+" : " + ratio+ " " +base)
-	})
+//	d3.select("."+comparator).on("mouseover", function(){
+//		console.log(base)
+//		d3.select("#tab-detail").html("1 "+comparator+" : " + parseInt(ratio)+ " " + pluralDictionary[base])
+//	})
+}
+
+var pluralDictionary={
+	"human":"people",
+	"tree":"trees",
+	"child":"children",
+	"car":"cars",
+	"public transportation":"public commuters"
 }
 
 $(function() {
