@@ -8,55 +8,77 @@ var global = {
 	city: 0,
 	data: null
 }
-var tree = "tree"
-var human = "human"
-var car = "car"
-var child = "child"
-var bikeCommuter = "bike commuter"
-var publicCommuter = "public transportation"
-var carCommuter = "car commuter"
-var restaurant = "restaurant"
-var cafe = "cafe"
-var park = "park"
-var intersection = "intersection"
-var trafficSignal = "traffic signal"
-var accident = "accident"
-var walk = "walk to work"
+var symbolDictionary = {
+	"child":"child.png",
+	"human":"man.png",
+	"tree":"tree.png",
+	"cafe":"cafe.png",
+	"companies registered":"museum.png",
+	"park":"park.png",
+	"car":"car.png",
+	"bike commuter":"bike.png",
+	"car commuter":"driver.png",
+	"intersection":"intersection.png",
+	"school":"school.png",
+	"museum":"museum.png",
+	"public transportation":"bus.png",
+	"traffic signal":"trafficSignal.png"
+}
 
 function dataDidLoad(error, data) {
 	var data = data
-	var base = "human"
 	var city = global.city
 	global.data = data
+	console.log(data)
 	//console.log(calculateRatios(data,base,city))
-	displayRatios(calculateRatios(data,base,city),base)
+	var base = "human"
+	var comparator1 = "tree"
+	var peopleDictionary = calculateRatios(data,city, "human",["tree","companies registered","cafe"])
+	displayRatios(".people",peopleDictionary,base,"tree")
+	displayRatios(".people",peopleDictionary,base,"companies registered")
+	displayRatios(".people",peopleDictionary,base,"cafe")
+	
+	var childDictionary = calculateRatios(data,city, "child",["school","park","museum","tree"])
+	displayRatios(".child",childDictionary,"child","tree")
+	displayRatios(".child",childDictionary,"child","park")
+	displayRatios(".child",childDictionary,"child","school")
+	displayRatios(".child",childDictionary,"child","museum")
+
+	var commuterDictionary = calculateRatios(data,city, "human",["public transportation","car commuter","bike commuter"])
+	displayRatios(".commute",commuterDictionary,"human","public transportation")
+	displayRatios(".commute",commuterDictionary,"human","car commuter")
+	displayRatios(".commute",commuterDictionary,"human","bike commuter")
+	var bikeDictionary = calculateRatios(data,city, "public transportation",["bike commuter","car commuter"])
+	displayRatios(".commute",bikeDictionary,"public transportation","car commuter")
+	displayRatios(".commute",bikeDictionary,"public transportation","bike commuter")
+	
+	var infrastructureDictionary = calculateRatios(data,city, "car",["intersection","tree","traffic signal"])
+	displayRatios(".street",infrastructureDictionary,"car","tree")
+	displayRatios(".street",infrastructureDictionary,"car","intersection")
+	displayRatios(".street",infrastructureDictionary,"car","traffic signal")
+	
 }
 
-function resetBase(base, data){
-	var city = global.city
-	var data = global.data
-	displayRatios(calculateRatios(data,base,city),base)
-	d3.selectAll(".activetab").style("color","#666")
-	d3.select("."+base).attr("class","activetab")
-}
-
-function calculateRatios(data,base,city){
+function calculateRatios(data,city, base, comparators){
 	//var currentBase = base
 	//console.log(data[0])
-	var cityIndex = 0
- 	var currentBase = base
-	var currentBaseValue = data[cityIndex][currentBase]
-	var ratioDictionary = {}
-	for(var item in data[cityIndex]){
-		if(item != currentBase && item !="city"){
-			var field = item
-			var value = currentBaseValue/data[cityIndex][item]
-			ratioDictionary[field] = value
-		}
+	var cityIndex = city
+	var base = parseInt(data[cityIndex][base])
+	var dictionary = {}
+	for(var comparator in comparators){
+		dictionary[comparators[comparator]] = base/parseInt(data[cityIndex][comparators[comparator]])
 	}
-	//ratioDictionary.sort(compare)
-	return ratioDictionary
+	console.log(dictionary)
+	return dictionary
 }
+
+//var childrenDictionary = {
+//	"park": child/parseInt(data[cityIndex]["park"]),
+//	"school": child/parseInt(data[cityIndex]["school"]),
+//	"museum": child/parseInt(data[cityIndex]["museum"])
+//}
+
+
 function compare(a,b) {
   if (a[1] < b[1])
      return -1;
@@ -64,71 +86,44 @@ function compare(a,b) {
     return 1;
   return 0;
 }
+function displayRatios(div, data, base, comparator){
+	var ratio = data[comparator]
+	var iconsize = 15
+//	console.log(ratio)
+//	console.log(symbolDictionary[base])
+console.log(ratio)
+var height = (ratio/10+1)*iconsize
+//console.log(height)
+	var svg = d3.select(div).append("svg").attr("height",height).attr("width",iconsize*11).append("g").attr("class", comparator)
+	//append base first
+	svg.append("svg:image")
+		.attr("xlink:href", symbolDictionary[comparator])
+		.attr("x",0)
+		.attr("y",0)
+		.attr("width",iconsize)
+		.attr("height",iconsize)
+		.attr("fill","#aaaaaa")
+	//append colon
+	//append comparator
+	var j = 0
 
-var symbolDictionary = {
-	//"bike commuter":"<i class=\"fa fa-bicycle\"></i>",
-	//"tree":"<i class=\"fa fa-tree\"></i>",
-	"tree":"t",
-	"bike commuter":"b",
-	"human":"<i class=\"fa fa-user\"></i>",
-	//"driver":"driver",
-	//"car": "<i class=\"fa fa-car\"></i>",
-	"car": "c",
-	"child":"c",
-	"public transportation":"p",
-	//"public transportation": "<i class=\"fa fa-bus\"></i>",
-	"driver":"d",
-	"car commuter":"c",
-	"walk to work":"w",
-	"traffic signal":"t",
-	"intersection":"i",
-	//"restaurant": "<i class=\"fa fa-cutlery\"></i>",
-	"restaurant": "r",
-	"cafe":"c",
-	"park":"p",
-	"companies registered":"c",
-	"accident":"<i class=\"fa fa-ambulance\"></i>",
-	"museum":"m"
-	//"museum":"<i class=\"fa fa-university\"></i>"
-}
-function displayRatios(ratioData,base){
-	//console.log(ratioData)
-	var outputData = "<table>"
-//	var outputString = ""
-	var base = base
-	//console.log(base)
-	for (var item in ratioData){
-		//console.log(item)
-		outputData = outputData+"<tr>"
-		//console.log(ratioData[item])
-		//check ratio, alwayse use smaller number as base
-		if(ratioData[item]<1){
-			//console.log(base + " is smaller than "+ item)
-			var one = symbolDictionary[base]
-			var multiple = symbolDictionary[item]
-			var newRatio = 1/ratioData[item]
+	for(var i = 0; i < ratio; i++){
+		if((i+1)%20 == 0){
+			j = j+1
 		}
-		else{
-			//console.log(base + " is larger than "+ item)
-			var one =  symbolDictionary[item]
-			var multiple = symbolDictionary[base]
-			var newRatio = ratioData[item]
-		}
-		
-		
-		outputData = outputData+"<td>"+one+"</td><td>"
-		for(var times = 0; times < newRatio; times+=1){
-			outputData = outputData+" "+multiple
-		}
-		outputData = outputData+"</td></tr>"
-	//	console.log(item)
+		svg.append("svg:image")
+			.attr("xlink:href", symbolDictionary[base])
+			.attr("x",(i%20)*iconsize+iconsize)
+			.attr("y",j*iconsize)
+			.attr("width",iconsize)
+			.attr("height",iconsize)
+			.attr("fill","#aaaaaa")
+			.transition()
+			.delay(function(){return i*1000})
 	}
-	outputData = outputData+"</table>"
-	
-	//console.log(outputData)
-	
-	
-	d3.select("#ratio-content").html(outputData)
+	d3.selectAll("."+comparator).on("mouseover", function(){
+		d3.select("#tab-detail").html("1 "+comparator+" : " + ratio+ " " +base)
+	})
 }
 
 $(function() {
